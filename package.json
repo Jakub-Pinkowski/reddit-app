@@ -10,6 +10,8 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@supabase/auth-ui-react": "^0.4.6",
+        "@supabase/supabase-js": "^2.38.4",
         "detect-port": "^1.5.1",
         "localforage": "^1.10.0",
         "match-sorter": "^6.3.1",
