@@ -5,9 +5,12 @@ test.describe('User auth', () => {
     const userEmail = 'test@test.io'
     const userPassword = 'test123456'
     const userName = 'testuser'
+    const url = 'http://localhost:5173/'
+
     test.beforeEach(setupE2eTest)
     test.beforeEach(async ({ page }) => {
-        await page.goto('http://localhost:5173')
+        console.log('Navigating to:', url)
+        await page.goto(url)
     })
     test('new user can signup', async ({ browser, page }) => {
         await signUp(page, userEmail, userPassword, userName)
@@ -16,21 +19,21 @@ test.describe('User auth', () => {
     test('after signing up, user can login from another machine', async ({ browser, page }) => {
         await signUp(page, userEmail, userPassword, userName)
         const newMachine = await browser.newPage()
-        await newMachine.goto('http://localhost:5173')
+        await newMachine.goto(url)
         await login(newMachine, userEmail, userPassword, userName)
     })
 
     test('after signing up, user is logged in on a new tab', async ({ context, page }) => {
         await signUp(page, userEmail, userPassword, userName)
         const newTab = await context.newPage()
-        await newTab.goto('http://localhost:5173')
+        await newTab.goto(url)
         const logoutButton = newTab.locator('button', { hasText: 'Logout' })
         await expect(logoutButton).toHaveCount(1)
     })
 
     test('user without a username gets redirected to "/welcome"', async ({ page }) => {
         await signUp(page, userEmail, userPassword, userName, true)
-        await page.goto('http://localhost:5173')
+        await page.goto(url)
         const welcomeNotice = page.locator('h2', {
             hasText: 'Welcome to Supaship!',
         })
@@ -62,7 +65,7 @@ test.describe('User auth', () => {
 
     test.describe('username validation', () => {
         test.beforeEach(async ({ page }) => {
-            await page.goto('http://localhost:5173')
+            await page.goto(url)
             await signUp(page, userEmail, userPassword, userName, true)
         })
         test('it should not allow an empty username', async ({ page }) => {
